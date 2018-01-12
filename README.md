@@ -1,6 +1,6 @@
 # GRobot
 
-A simple grid world based simulated robot written in pure Python, using only standard libs and Python 2 and 3 compatible.
+A simple grid world based simulated robot written in pure Python, using only standard libs and Python 2 and 3 compatible. See the manual for full details for using the simulator.
  
 # RobotGridWorldSimulator.pyw - A simple grid world based simulated robot written in pure Python, using only standard libs and Python 2 and 3 compatible.and Python 2 and 3 compatible.
 
@@ -10,7 +10,7 @@ Note, the module (grobot.py program file) must either be placed in the current w
 
 When imported into your own robot control program, grobot.py provides a simple Application Programming Interface (API) for the RobotGridWorld.py Robot Simulator which must be already running when you run your gRobot program otherwise an error message will be displayed, and your gRobot program will terminate.
 
-RobotGridWorld Robot Simulator
+# RobotGridWorld Robot Simulator
 
 To run the simulator, simply double click on the program icon from your favourite file manager (Linux) or File Explorer (Windows or Mac).
 

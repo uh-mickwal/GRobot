@@ -49,21 +49,24 @@ If the simulator is not running, an error message will be displayed, and the pro
 Once a robot is created (instantiated), the robot object has five methods available. E.g. if the robot is instantiated as fred:
 
  fred.forward() # Moves robot orthogonally forward one grid square.
- # If way is blocked returns "Bang" and the robot will turn # into a black circle, otherwise returns "OK" 
- # If the robot has already returned "Bang", subsequent calls to # forward will return "Broken" fred.right() 
- # robot turns 90 degrees right, returns "OK", or "Broken" if a # collision has occured fred.left() 
- # robot turns 90 degrees left, returns "OK", or "Broken" if a 
- # collision has occured 
- fred.look() # Returns a list of elements [viewLeft, viewDiagLeft, # viewForward, viewDiagRight, viewRight] 
- # Each element can be either "Wall" if the forward way 
- # is blocked by a Wall, a name of the robot 
- # blocking the way, or None if the way is clear. If a collison 
- # has occured, this will return a list of ["Broken"]*5. 
- fred.init(x,y) # Resets and initialises the named robot to start at position 
- # (x, y). Note. x and y are optional. If left out uses last 
- # provided values from an init() or NewRobot
+ If way is blocked returns "Bang" and the robot will turn # into a black circle, otherwise returns "OK"
+ If the robot has already returned "Bang", subsequent calls to # forward will return "Broken" 
+ 
+ fred.right() 
+ robot turns 90 degrees right, returns "OK", or "Broken" if a collision has occured 
+ 
+ fred.left() 
+ robot turns 90 degrees left, returns "OK", or "Broken" if a collision has occured 
+ 
+ fred.look() 
+ Returns a list of elements [viewLeft, viewDiagLeft, # viewForward, viewDiagRight, viewRight] 
+ Each element can be either "Wall" if the forward way is blocked by a Wall, the name of a robot 
+ blocking the way, or None if the way is clear. If a collison has occured, this will return a list of ["Broken"]*5. 
+ 
+ fred.init(x,y) # Resets and initialises the named robot to start at position (x, y). Note. x and y are optional. 
+ If left out uses last provided values from an init() or NewRobot
 
-There is one function in the module availalble: grobot.demo() This provides a short demo of how to create a NewRobot() and use the methods described above. The demo is run automatically if the module is run directly (i.e. not imported):
+There is one function in the module availalble: grobot.demo(). This provides a short demo of how to create a NewRobot() and use the methods described above. The demo is run automatically if the module is run directly (i.e. not imported):
 
 def demo():
  fred=NewRobot("fred", 1, 1) 

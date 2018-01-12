@@ -27,7 +27,7 @@ import grobot
 
 To create a new robot in the simulated world, use:
 
-robotname=grobot.NewRobot(, , , , )
+robotname=grobot.NewRobot()
 
 Where: is a string which contains the name of the robot. If several robots e]used, all must have unique names.
 
@@ -69,7 +69,7 @@ import grobot
 
 To create a new robot in the simulated world, use:
 
-robotname=grobot.NewRobot(, , , , )
+robotname=grobot.NewRobot()
 
 Where: is a string which contains the name of the robot. If several robots e]used, all must have unique names.
 
@@ -97,7 +97,10 @@ print("Fred looks forward at", fred.look()[2]) # element 2 is forward view print
 
 Note, if you load either the "Demo.map" or Test.map world into tthe simulator, the grobot.demo() will demonstrate the options and return values from the robot methods (functions). You can also import and use the grobot module (program) from the interactive shell and try out the commands interactively, e.g.:
 
-        import grobot grobot.demo() fred = grobot.NewRobot("fred", 5, 5, "red") fred.look() "wall" fred.forward() "Bang" fred.init() "OK"
+        import grobot grobot.demo() 
+        fred = grobot.NewRobot("fred", 5, 5, "red") 
+        fred.look() -> "wall" 
+        fred.forward() "Bang" fred.init() ->  "OK"
 
 
 Once a robot is created (instantiated), the robot object has five methods available. E.g. if the robot is instantiated as fred:
@@ -112,5 +115,10 @@ print("Fred looks forward at", fred.look()[2]) # element 2 is forward view print
 
 Note, if you load either the "Demo.map" or Test.map world into tthe simulator, the grobot.demo() will demonstrate the options and return values from the robot methods (functions). You can also import and use the grobot module (program) from the interactive shell and try out the commands interactively, e.g.:
 
-        import grobot grobot.demo() fred = grobot.NewRobot("fred", 5, 5, "red") fred.look() "wall" fred.forward() "Bang" fred.init() "OK"
+        import grobot 
+        grobot.demo() 
+        fred = grobot.NewRobot("fred", 5, 5, "red") 
+        fred.look() -> "wall" 
+        fred.forward() -> "Bang" 
+        fred.init() -> "OK"
 

@@ -94,9 +94,23 @@ fred.forward() # Moves robot orthogonally forward one grid square. # If way is b
 
 There is one function in the module availalble: grobot.demo() This provides a short demo of how to create a NewRobot() and use the methods described above. The demo is run automatically if the module is run directly (i.e. not imported):
 
-def demo(): # print used to show return value from method/function calls fred=NewRobot("fred", 1, 1) bill=NewRobot("bill", 1, 1, "green") print("Fred forward", fred.forward()) print("Bill forward",bill.forward()) print("Fred right", fred.right()) print("Bill right", bill.right()) #fred.init(7,7) count = 12 while count > 0: #print(count) print("Fred looks at:", fred.look()) print("Fred forward",fred.forward()) print("Bill looks at:", bill.look()) print ("Bill forward",bill.forward()) count -= 1
-
-print("Fred looks forward at", fred.look()[2]) # element 2 is forward view print("Bill looks forward at", bill.look()[2])
+def demo():
+ fred=NewRobot("fred", 1, 1) 
+ bill=NewRobot("bill", 1, 1, "green") 
+ print("Fred forward", fred.forward()) 
+ print("Bill forward",bill.forward()) 
+ print("Fred right", fred.right()) print("Bill right", 
+ bill.right()) 
+ fred.init(7,7) count = 12 
+ while count > 0: 
+   #print(count) 
+   print("Fred looks at:", fred.look()) 
+   print("Fred forward",fred.forward()) 
+   print("Bill looks at:", bill.look()) 
+   print ("Bill forward",bill.forward()) 
+   count -= 1
+   print("Fred looks forward at", fred.look()[2]) # element 2 is forward view 
+   print("Bill looks forward at", bill.look()[2])
 
 Note, if you load either the "Demo.map" or Test.map world into tthe simulator, the grobot.demo() will demonstrate the options and return values from the robot methods (functions). You can also import and use the grobot module (program) from the interactive shell and try out the commands interactively, e.g.:
 

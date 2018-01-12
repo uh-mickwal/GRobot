@@ -2,11 +2,9 @@
 
 A simple grid world based simulated robot written in pure Python, using only standard libs and Python 2 and 3 compatible.
  
-# GRobot.py - A client API for the RobotGridWorld Simulator M L Walters. V0.5 Nov 2015 M L Walters, V1.0 Nov 2015 M L Walters, V2.1 Feb 2016
-
 # RobotGridWorldSimulator.pyw - A simple grid world based simulated robot written in pure Python, using only standard libs and Python 2 and 3 compatible.and Python 2 and 3 compatible.
 
-GRobot.py - A client API for the RobotGridWorld Simulator M L Walters. V0.5 Nov 2015 M L Walters, V1.0 Nov 2015 M L Walters, V1.2 Dec 2015, V2.1 Feb 2016
+# GRobot.py - A client API for the RobotGridWorld Simulator M L Walters. V0.5 Nov 2015 M L Walters, V1.0 Nov 2015 M L Walters, V1.2 Dec 2015, V2.1 Feb 2016
 
 Note, this module (grobot.py program file) must either be placed in the current working directory (folder) or in a suitable directory in the Python standard search path.
 

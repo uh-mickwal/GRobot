@@ -1,0 +1,74 @@
+
+CdM-8 Assembler v2.1 <<<displayTest.asm>>> 06/04/2016 22:06:39
+
+                  1  # Xpos, Ypos Display test
+                  2  
+                  3  macro   define/2
+                  4          asect $2
+                  5  $1:
+                  6  mend
+                  7  
+                  8          define IOregRB,         0xf0    # GRobot IO register in IO page
+                  9          define IOregHDG,        0xf1    # Heading indicator LEDs (bit 0=N, 1=E, 2=S and 3=W
+                 10          define IOregXpos, 0xf2  # X position indicator
+                 11          define IOregYpos, 0xf3  # Y position indicator
+                 12          define IOregBtn,        0xf4    # Button pressed. Buton pressed bits 0 to 3, Bit 7, 1 if button new pressed.
+                 13  
+                 14          define  look,   0b10000000      # Just look, no move
+                 15          define  right,  0b10000001      # movement commands
+                 16          define  left,   0b10000010
+                 17          define  forward,        0b10000100
+                 18          define  home,           0b10001000
+                 19  
+                 20  
+                 21          asect 0x00
+00: d0 ef        22          ldi     r0, 0xef
+02: c8           23          stsp    r0                      # set stack below IO segment
+                 24  #
+                 25  # ########################################################################### MAIN PROGRAM
+                 26  
+                 27  Main:
+03: d3 1a        28          ldi r3, Heading
+05: d2 02        29          ldi r2, 0b00000010 # heading = N
+07: ae           30          st r3, r2
+08: d3 f1        31          ldi r3, IOregHDG # Update display
+0a: ae           32          st r3, r2
+0b: d3 1b        33          ldi r3, Xpos    # Xpos
+0d: d2 01        34          ldi r2, 1
+0f: ae           35          st r3, r2       # Xpos = 1
+10: d3 f2        36          ldi r3, IOregXpos
+12: ae           37          st r3, r2
+13: d3 1c        38          ldi r3, Ypos # Ypos = 1
+15: ae           39          st r3, r2
+16: d3 f3        40          ldi r3, IOregYpos
+18: ae           41          st r3, r2
+                 42  
+                 43  
+                 44  
+19: d4           45  halt
+                 46  
+                 47  # Variables
+1a: 02           48  Heading:        dc 0b00000010 # = N, W= 0100, S = 1000, E=0001
+1b: 01           49  Xpos:           dc 1            # Initial Xpos
+1c: 01           50  Ypos:           dc 1            # Initial Ypos
+                 51  
+                 52  
+                 53  
+                 54  end
+
+======================================================================
+
+SECTIONS:
+Name	Size	Relocation offsets
+
+
+ENTRIES:
+Section		Name/Offset
+
+$abs		<NONE>
+
+EXTERNALS:
+Name		Used in
+
+
+======================================================================

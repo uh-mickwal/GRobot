@@ -1,0 +1,292 @@
+
+CdM-8 Assembler v2.1 <<<grobotMaze.asm>>> 16/05/2016 11:02:04
+
+                  1  # GRobot Demo Program V1
+                  2  # M L Walters, April, 2016
+                  3  
+                  4  macro   define/2
+                  5          asect $2
+                  6  $1:
+                  7  mend
+                  8  
+                  9          define IOregRB,         0xf0    # GRobot IO register in IO page
+                 10          define IOregHDG,        0xf1    # Heading indicator LEDs (bit 0=N, 1=E, 2=S and 3=W
+                 11          define IOregXpos, 0xf2  # X position indicator
+                 12          define IOregYpos, 0xf3  # Y position indicator
+                 13          define IOregBtn,        0xf4    # Button pressed. Button pressed bits 0 to 3, Bit 7, 1 if button new pressed.
+                 14          define IOregDbg,        0xf5    # Debug port
+                 15  
+                 16          define  look,   0b00000000      # Just look, no move
+                 17          define  right,  0b00000001      # movement commands
+                 18          define  left,   0b00000010
+                 19          define  forward,        0b00000100
+                 20          define  home,           0b00001000
+                 21  
+                 22          # Variables in data memeory
+                 23          define  Heading,        0x00
+                 24          define  Xpos,   0x01
+                 25          define  Ypos,           0x02
+                 26          define  Sensors,        0x03
+                 27  
+                 28  macro rand/1 # Return (not very!) random number between 0 to 255 in rn
+                 29          ldi $1, Xpos
+                 30          ld $1, $1 # Load Xpos
+                 31          ldc $1, $1 # Load code value pointed to by Xpos
+                 32  mend
+                 33  
+                 34  asect 0x00
+                 35  Start:
+                 36  
+00: d0 f0        37          ldi     r0, 0xf0
+02: c8           38          stsp    r0                      # set stack below IO segment
+                 39  #
+                 40  # ########################################################################### MAIN PROGRAM
+                 41  
+                 42  Main:
+                 43          # Wait for a button to be pressed
+03: d0 f4        44          ldi r0, IOregBtn
+                 45          do
+05: b1           46                  ld r0, r1
+06: 05           47                  tst r1
+07: e5 05        48          until mi # Bit 7; 1=0 button pressed
+                 49          #ldi r0, IOregXpos # Debug
+                 50          #st r0, r1              # Debug
+                 51          if
+09: d2 84        52                  ldi r2, -124 # Home button = 4
+0b: 76           53                  cmp r1, r2
+0c: e1 10        54          is eq
+0e: d6 61        55                  jsr ActHome
+                 56          fi
+                 57          if
+10: d2 87        58          ldi r2, -121 #Forward button = 7
+12: 76           59          cmp r1, r2
+13: e1 17        60          is eq
+15: d6 7c        61                  jsr ActFwd
+                 62          fi
+                 63          if
+17: d2 86        64          ldi r2, -122 # Right button = 6
+19: 76           65          cmp r1, r2
+1a: e1 1e        66          is eq
+1c: d6 bf        67                  jsr ActRight
+                 68          fi
+                 69          if
+1e: d2 85        70          ldi r2, -123 # Left button = 5
+20: 76           71          cmp r1, r2
+21: e1 25        72          is eq
+23: d6 ae        73                  jsr ActLeft
+                 74          fi
+                 75          if
+25: d2 83        76          ldi r2, -125 # RUN Button
+27: 76           77          cmp r1, r2
+28: e1 2c        78          is eq
+2a: d6 2f        79                  jsr Userprog
+                 80          fi
+2c: ee 03        81  br Main # Loop forever!
+2e: d4           82  halt # Just in case!
+                 83  
+                 84  
+                 85  # ################### User Program (activated by RUN button
+                 86  Userprog:       # Robot uses left hand rukle to find maze exit
+                 87          # Check if Run/Stop button pressed
+2f: d1 00        88          ldi r1, look
+31: d6 d3        89          jsr Action # get sensor values. Note if error will (pop) rts back to Main
+                 90          # Note only need to do this once!
+                 91  Loopst:
+                 92          # Check Stop button, rts if pressed
+                 93          if
+33: d2 f4        94                  ldi r2, IOregBtn
+35: d3 83        95                  ldi r3, -125 # Home button = 0x04 and bit 7 set
+37: ba           96                  ld r2, r2
+38: 7b           97                  cmp r2, r3
+39: e1 3c        98          is eq
+3b: d7           99                  rts
+                100          fi
+                101          # Note, r1 still contains Sensor values
+                102          if
+3c: d2 10       103                  ldi r2, 0b00010000 # Turn left if clear
+3e: 46          104                  and r1, r2
+3f: e1 43       105          is z
+41: d6 ae       106                  jsr ActLeft # Returns sensor values in r1
+                107  
+                108          fi
+                109          if
+43: d2 04       110                  ldi r2, 0b00000100 # Go forward if clear
+45: 46          111                  and r1, r2
+46: e1 4c       112          is z
+48: d6 7c       113                  jsr ActFwd # Returns sensor values in r1
+4a: ee 4e       114          else
+4c: d6 bf       115                  jsr ActRight # Otherwise, turn right. # Returns sensor values in r1
+                116          fi
+                117          # Check if robot has reached maze exit
+                118          if # Check for exit position
+4e: d2 01       119          ldi r2, Xpos
+50: ba          120          ld r2, r2       # X position
+51: d3 00       121          ldi r3, 0 # Maze exit
+53: 7b          122          cmp r2, r3
+54: e1 5f       123          is z
+                124                  if
+56: d2 02       125                  ldi r2, Ypos
+58: ba          126                  ld r2, r2
+59: d3 0f       127                  ldi r3, 15
+5b: 7b          128                  cmp r2, r3
+5c: e1 5f       129                  is z
+5e: d7          130                          rts # Exit reached!
+                131                  fi
+                132          fi
+                133  
+5f: ee 33       134  br Loopst # Do again
+                135  
+                136  # ################### Subroutines
+                137  ActHome:        # Initialise to Heading = N, Xpos=1, Ypos=1
+                138          # Returns sensor bits in r1, or 0b01100000
+61: d1 08       139          ldi r1, home
+63: d6 d3       140          jsr Action # r1 = For init home, only comm/fatal error possible
+65: d3 00       141          ldi r3, Heading
+67: d2 02       142          ldi r2, 0b00000010 # heading = N
+69: ae          143          st r3, r2
+6a: d3 f1       144          ldi r3, IOregHDG # Update display
+6c: ae          145          st r3, r2
+6d: d3 01       146          ldi r3, Xpos    # Xpos
+6f: d2 01       147          ldi r2, 1
+71: ae          148          st r3, r2       # Xpos = 1
+72: d3 f2       149          ldi r3, IOregXpos
+74: ae          150          st r3, r2
+75: d3 02       151          ldi r3, Ypos # Ypos = 1
+77: ae          152          st r3, r2
+78: d3 f3       153          ldi r3, IOregYpos
+7a: ae          154          st r3, r2
+7b: d7          155  rts
+                156  
+                157  
+                158  ActFwd:  # Forward
+7c: d1 04       159          ldi r1, forward
+7e: d6 d3       160          jsr Action # returns error sensor data in r1
+                161          # Note r1 not changed by this subr
+                162          # Update Xpos and Ypos and dusplays
+80: d2 00       163          ldi r2, Heading
+82: ba          164          ld r2, r2       # get current heading
+83: d3 02       165          ldi r3, Ypos
+85: bf          166          ld r3, r3       # Load Ypos
+                167          if # Heading = N
+86: d0 02       168          ldi r0, 0b00000010 # N
+88: 78          169          cmp r2, r0
+89: e1 8c       170          is eq
+8b: 8f          171                  inc r3
+                172          fi
+                173          if # Heading = S
+8c: d0 08       174          ldi r0, 0b00001000 # S
+8e: 78          175          cmp r2, r0
+8f: e1 92       176          is eq
+91: 8b          177                  dec r3
+                178          fi
+                179          # Store Ypos, even if it has not changed!
+92: d0 02       180          ldi r0, Ypos # Update Ypos
+94: a3          181          st r0, r3
+95: d0 f3       182          ldi r0, IOregYpos # Update display
+97: a3          183          st r0, r3
+                184          # Then Xpos
+98: d3 01       185          ldi r3, Xpos
+9a: bf          186          ld r3, r3       # Load Xpos
+                187          if # Heading = E
+9b: d0 01       188          ldi r0, 0b00000001 # E
+9d: 78          189          cmp r2, r0
+9e: e1 a1       190          is eq
+a0: 8f          191                  inc r3
+                192          fi
+                193          if
+a1: d0 04       194          ldi r0, 0b00000100 # W
+a3: 78          195          cmp r2, r0
+a4: e1 a7       196          is eq
+a6: 8b          197                  dec r3
+                198          fi
+                199          # Again, store, even if not changed
+a7: d0 01       200          ldi r0, Xpos # Get Xpos
+a9: a3          201          st r0, r3
+aa: d0 f2       202          ldi r0, IOregXpos # Update display
+ac: a3          203          st r0, r3
+ad: d7          204  rts
+                205  
+                206  
+                207  ActLeft:
+ae: d1 02       208          ldi r1, left
+b0: d6 d3       209          jsr Action
+b2: d3 00       210          ldi r3, Heading
+b4: bf          211          ld r3, r3       # get previous heading
+b5: 2f          212          shl r3
+                213          if
+b6: d2 10       214          ldi r2, 0b00010000
+b8: 4e          215          and r3, r2
+b9: e0 bd       216          is nz
+bb: d3 01       217                  ldi r3, 0b00000001
+                218          fi
+bd: ee cc       219          br StHdg # Skip to store heading
+                220  ActRight:
+bf: d1 01       221          ldi r1, right
+c1: d6 d3       222          jsr Action
+c3: d3 00       223          ldi r3, Heading
+c5: bf          224          ld r3, r3
+c6: 93          225          shr r3
+                226          if # Check for overflow
+c7: 0f          227          tst r3
+c8: e1 cc       228          is z
+ca: d3 08       229                  ldi r3, 0b00001000
+                230          fi
+                231  StHdg: # Store heading, even if not changed
+cc: d2 00       232          ldi r2, Heading
+ce: ab          233          st r2, r3
+cf: d2 f1       234          ldi r2, IOregHDG # Update LEDs
+d1: ab          235          st r2, r3
+d2: d7          236  rts
+                237  
+                238  Action: # Robot action passed in r1.
+                239          # Returns r1 = (Bits 6 = Fatal error, bit 5 = Collision) or (bits 0 to 4 sensor readings (1 = blocked)).
+                240          # Do action
+d3: d0 f0       241          ldi r0, IOregRB  # Robot IO port
+d5: a1          242          st  r0, r1              # Do the action
+                243          # Check for collision (or error)
+d6: d2 80       244          ldi r2, 0b10000000
+                245          # Wait until returned data is valid
+                246          do
+d8: b1          247                  ld r0, r1
+d9: 46          248                  and r1, r2
+da: e0 d8       249          until nz
+                250          # Test for errors
+                251          if
+dc: d2 60       252          ldi r2, 0b01100000
+de: 46          253          and r1, r2 # keep r1
+df: e0 e4       254          is nz # If error skip update displays and x, y and heading variables
+e1: c6          255                  pop r2 # Skip updating displays  (dirty programming! Saves >10 bytes!)
+                256                  #ldi r0, IOregDbg
+                257                  #st r0, r1              # Debug r1
+e2: ee ea       258          else
+                259                  # Store current Sensor data
+e4: d2 1f       260                  ldi r2, 0b00011111
+e6: 49          261                  and r2, r1 # Just leave bits 0 to 5
+e7: d0 03       262                  ldi r0, Sensors
+e9: a1          263                  st r0, r1
+                264          fi
+                265  
+                266  
+ea: d7          267  rts
+                268  
+                269  
+                270  #asect 0xf4
+                271  #       dc 0b10000010 # button 4 = Home Button for emulator testing
+                272  end
+
+======================================================================
+
+SECTIONS:
+Name	Size	Relocation offsets
+
+
+ENTRIES:
+Section		Name/Offset
+
+$abs		<NONE>
+
+EXTERNALS:
+Name		Used in
+
+
+======================================================================

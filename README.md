@@ -25,22 +25,22 @@ Simulation Controls: "Toggle Trails" - Toggles the display of pproriately colour
 
 Creating a RobotGrid World Robot Programs
 
-Grom your Python IDE, select New program, then at the beginning of your robot program, you must first import the grobot.py clientinto your own program. Usage:
+From your Python IDE, select New program, then at the beginning of your robot program, you must first import the grobot.py clientinto your own program. Usage:
 
 import grobot
 
-To create a new robot in the simulated world, use:
+To create a new robot in the simulated world:
 
 myrobot = grobot.NewRobot(name, xpos, ypos, colour, shape)
 
 Where:
-name is a string which contains the name of the robot. If several robots are used, all must have unique names.
+  name is a string which contains the name of the robot. If several robots are used, all must have unique names.
 
-xpos and ypos are Integers (both between 0 and 30) which are the initial or starting world XY co-ordinate position of the robot. If left blank, the robot will be set to starting position x = 1, Y = 1.
+  xpos and ypos are Integers (both between 0 and 30) which are the initial or starting world XY co-ordinate position of the robot. If left blank, the robot will be   set to starting position x = 1, Y = 1.
 
-colour is a string which denotes which colour the robot will be. The common colours are ; "red", "blue", "green", "yellow", "black". If the parameter is not provided, the robot will be red.
+  colour is a string which denotes which colour the robot will be. The common colours are ; "red", "blue", "green", "yellow", "black". If the parameter is not       provided, the robot will be red.
 
-shape is a string that denotes one of the standard turtle shapes. Left blank or None if the standard robot shape is to be used See the Python Turtle doc for details.
+  shape is a string that denotes one of the standard turtle shapes. Left blank or None if the standard robot shape is to be used See the Python Turtle doc for       details.
 
 The parameters for this function are all optional, but if several robots are to be simulated simutaneously, the name parameter must be supplied, and the initial positions (xpos, and ypos) for each new robot must be different. E.g.:
 

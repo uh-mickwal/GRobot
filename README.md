@@ -12,39 +12,41 @@ When imported into your own robot control program, grobot.py provides a simple A
 
 # RobotGridWorld Robot Simulator
 
+First make sure Python is installed (V3+ preferred, but runs under Pyhon 2.7). Visit www.python.org and follow the instructions for your OS.
 To run the simulator, simply double click on the program icon from your favourite file manager (Linux) or File Explorer (Windows or Mac).
 
 The simulator program will intially display a blank map, which is a 30x30 grid, with x and y co-ordinates marked along the lower and left sides respectively. There are several buttons availalble categorised as:
 
-Map Editing Controls: "New Map" - Clears the current Map ready for editng a new one "Load Map" - Loads a previously saved map "Save Map" - Saves the current (edited) map, for later loading
+Map Editing Controls: "New Map" - Clears the current Map ready for editng a new one "Load Map" - Loads a previously saved map "Save Map" - Saves the current (edited) map, for later loading.
 
 Clicking anywhere on the map grid area will toggle the building and removal of walls on the map. When the pattern of walls is as required, the map can be saved (click "Save Map" to a file (extension .map). The edited map can be recalled by selecting "Load Map".
 
-Simulation Controls: "Toggle Trails" - Toggles the display of pproriately coloured trials for each robot "Speed" - A slider control to adjusts the speed of the simulated robot(s) movements.
+Simulation Controls: "Toggle Trails" - Toggles the display of pproriately coloured trials for each robot. "Speed" - A slider control to adjust the speed of the simulated robot(s) movements.
 
-Creating RobotGrid World Robot Programs
+Creating a RobotGrid World Robot Programs
 
-At the beginning of your robot program, you must first import the grobot.py clientinto your own program. Usage:
+Grom your Python IDE, select New program, then at the beginning of your robot program, you must first import the grobot.py clientinto your own program. Usage:
 
 import grobot
 
 To create a new robot in the simulated world, use:
 
-robotname=grobot.NewRobot()
+myrobot = grobot.NewRobot(name, xpos, ypos, colour, shape)
 
-Where: is a string which contains the name of the robot. If several robots are used, all must have unique names.
+Where:
+name is a string which contains the name of the robot. If several robots are used, all must have unique names.
 
-Integers and (both between 0 and 31) are the initial or starting world co-ordinate position of the robot. If left blank, the robot will be set to starting position x = 1, Y = 1.
+xpos and ypos are Integers (both between 0 and 30) which are the initial or starting world XY co-ordinate position of the robot. If left blank, the robot will be set to starting position x = 1, Y = 1.
 
-is a string which denotes which colour the robot will be. The common colours are ; "red", "blue", "green", "yellow", "black". If the parameter is not provided, the robot will be red.
+colour is a string which denotes which colour the robot will be. The common colours are ; "red", "blue", "green", "yellow", "black". If the parameter is not provided, the robot will be red.
 
-is a string that denotes one of the standard turtle shapes. Left blank or None if the standard robot shape is to be used See the Python Turtle doc for details.
+shape is a string that denotes one of the standard turtle shapes. Left blank or None if the standard robot shape is to be used See the Python Turtle doc for details.
 
-The parameters for this function are all optional, but if several robots are to be simulated simutaneously, the parameter must be supplied, and the initial positions (xpos, and ypos) must be different. E.g.:
+The parameters for this function are all optional, but if several robots are to be simulated simutaneously, the name parameter must be supplied, and the initial positions (xpos, and ypos) for each new robot must be different. E.g.:
 
 fred = grobot.NewRobot("fred", 1, 2, "blue")
 
-If the simulator is not running, an error message will be displayed, and the program will exit.and Python 2 and 3 compatible.
+If the simulator is not running, an error message will be displayed, and the program will exit.
 
 Once a robot is created (instantiated), the robot object has five methods available. E.g. if the robot is instantiated as fred:
 
